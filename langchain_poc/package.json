@@ -1,0 +1,25 @@
+{
+  "name": "omnivore-label-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "rm -rf dist/ && tsc && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/community": "^0.0.50",
+    "@langchain/core": "^0.1.58",
+    "@langchain/mistralai": "^0.0.19",
+    "cheerio": "1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "langchain": "^0.1.34"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}
