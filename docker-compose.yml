@@ -1,15 +1,41 @@
+version: '3.7'
 services:
   redis:
     image: redis:alpine
+    restart: unless-stopped
     ports:
       - '6379:6379'
-    networks:
-      - omnivore-bot-network
+    volumes:
+      - redis-data:/data
   app:
-    build: .
-    ports:
-      - '3000:3000'
+    image: kirioxx/omnivore-label-bot:main
+    restart: unless-stopped
     depends_on:
       - redis
-    networks:
-      - omnivore-bot-network
+      - ts-app
+    environment:
+      - REDISHOST=redis
+      - REDISPORT=6379
+      - OMNIVORE_API_KEY=${OMNIVORE_API_KEY}
+      - OMNIVORE_USER_ID=${OMNIVORE_USER_ID}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+    network_mode: service:ts-app
+  ts-app:
+    image: tailscale/tailscale:latest
+    hostname: omnivore-label-bot
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_SERVE_CONFIG=/config/app.json
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - ts-state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+  ts-state:
