@@ -26,10 +26,7 @@ export class HealthController {
     const redisPort = this.configService.get<number>('database.port');
 
     return this.health.check([
-      () =>
-        this.disk.checkStorage('storage', { path: '/', thresholdPercent: 0.5 }),
       () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
-      () => this.memory.checkRSS('memory_rss', 150 * 1024 * 1024),
       () =>
         this.microservice.pingCheck<RedisOptions>('redis', {
           transport: Transport.REDIS,

@@ -71,3 +71,25 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+# Build docker image
+
+This project uses [nixpacks](https://nixpacks.com/docs/getting-started) to build a docker image.
+
+To create a docker config file, run:
+
+```bash
+nixpacks build . -o .
+```
+
+This will create a Dockerfile in `.nixpacks/Dockerfile`.
+
+To build and run the docker image, run:
+
+```bash
+docker compose --env-file=.env -f docker-composeyml up --build
+```
+
+To tunnel the app through tailscale, check out this [guide](https://tailscale.com/kb/1282/docker) on how to generate a Tailscale auth key and run the docker compose file with the `--env-file=.env` flag.
+
+This project also expects a Redis instance to be running on `192.168.0.80:6379`.

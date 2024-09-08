@@ -6,18 +6,21 @@ services:
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}
       - 'TS_EXTRA_ARGS=--advertise-tags=tag:container --reset'
-      - TS_SERVE_CONFIG=/var/lib/tailscale/config/app.json
+      - TS_SERVE_CONFIG=/config/app.json
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
     volumes:
-      - /volume1/docker/omnivore-label-bot/ts-app:/var/lib/tailscale
+      - ./config:/config
+      - ts-app:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - net_admin
       - sys_module
     restart: unless-stopped
   app:
-    image: kirioxx/omnivore-label-bot:main
+    build:
+      context: .
+      dockerfile: .nixpacks/Dockerfile
     restart: unless-stopped
     depends_on:
       - ts-app
@@ -29,3 +32,7 @@ services:
       - OMNIVORE_USER_ID=${OMNIVORE_USER_ID}
       - MISTRAL_API_KEY=${MISTRAL_API_KEY}
     network_mode: service:ts-app
+
+volumes:
+  ts-app:
+    driver: local
